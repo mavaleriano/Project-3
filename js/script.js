@@ -4,15 +4,25 @@
     To find how to hide default select for colors:
     https://stackoverflow.com/questions/27350843/how-can-i-hide-default-select-option-when-the-drop-down-is-clicked
  ***/
-
 const $otherRole = $('#other-title').hide();
 const $colorDiv = $('#colors-js-puns').hide();
 const $select = $('#color option').hide();
 const selectLength = $select.length;
 const defColor = $('<option value="" selected disabled hidden>Choose any color</option>');
 $('#color').append(defColor);
-const $activities = $('.activities label');
-$activities.eq(2).attr('disabled');
+const $activities = $('.activities label input[type=checkbox]');
+const $totalAmount = $('<label>Total amount: $0</label>');
+$('.activities').append($totalAmount);
+const $payment = $('#payment');
+const creditCard = $payment.next();
+const payPal = $payment.next().next();
+payPal.hide();
+const bitCoin = $payment.next().next().next();
+bitCoin.hide();
+const $paymentOptions = $payment.children();
+$paymentOptions.eq(1).prop('selected', true);
+$paymentOptions.eq(0).prop('disabled', true);
+
 
 /***
 * JOB ROLE
@@ -83,6 +93,7 @@ $('#design').change(function (event)
 
 });
 
+
 /***
 * REGISTER FOR ACTIVITIES
     -Add up total cost for activities
@@ -90,13 +101,60 @@ $('#design').change(function (event)
     Using custom data attributes:
     http://html5doctor.com/html5-custom-data-attributes/
 ***/
+$activities.change(function (event) {
+    let target = event.target.name;
+    let total = 0;
+    if (target === "js-frameworks" && this.checked) {
+        $activities.eq(3).prop('disabled', true);
+    }
+    else if (target === "js-frameworks")
+    {
+        $activities.eq(3).prop('disabled', false);
+    }
+
+    if (target === "js-libs" && this.checked) {
+        $activities.eq(4).prop('disabled', true);
+    }
+    else if (target === "js-libs") {
+        $activities.eq(4).prop('disabled', false);
+    }
+
+    $activities.each(function () {
+        if (this.checked) {
+            let regex = /\d{3}$/;
+            let string;
+            string = this.getAttribute('data-cost');
+            total += parseFloat(string.match(regex));
+        }
+    });
+    $totalAmount.html("Total amount: $" + total);
+});
 
 
 /***
 * PAYMENT INFO
-    -Make job role field show when other is chosen
+    -Display payment based on option chosen
 ***/
-
+$payment.change(function (event)
+{
+    const target = event.target.value;
+    if (target === "credit card") {
+        payPal.hide();
+        bitCoin.hide();
+        creditCard.show();
+    }
+    if (target === "paypal")
+    {
+        creditCard.hide();
+        bitCoin.hide();
+        payPal.show();
+    }
+    if (target === "bitcoin") {
+        creditCard.hide();
+        payPal.hide();
+        bitCoin.show();
+    }
+});
 
 /***
 * FORM VALIDATION
