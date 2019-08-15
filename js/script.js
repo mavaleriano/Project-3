@@ -124,7 +124,8 @@ $('#design').change(function (event)
             {
                 $select.eq(i).hide()
             }
-        }   
+        }
+        $('#color').val("").prop('selected', true);
     }
     else if (target === 'heart js')
     {
@@ -135,7 +136,8 @@ $('#design').change(function (event)
             else {
                 $select.eq(i).hide()
             }
-        }  
+        }
+        $('#color').val("").prop('selected', true);
     }
     else
     {
@@ -239,7 +241,7 @@ $('input').on('input', function(event)
 
     if (target === "user-name")
     {
-        Validate(/^[a-z]+$/i, value, event.target, nameValidation);
+        Validate(/^[a-z]+( [a-z]+)?( [a-z]+)?( ?\-?[a-z]+)?$/i, value, event.target, nameValidation);
     }
     if (target === "user-email")
     {
@@ -321,6 +323,7 @@ $('button').click(function (event)
 
     if (isComplete > 0 || $('#design option:selected').val() === "Select Theme" || $('#color option:selected').val() === "") // [3]
     {
+        alert("Validation error: Fix red validation messages!")
         event.preventDefault();
     }
 
